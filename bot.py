@@ -40,28 +40,15 @@ def attemptBuy():
     if(percentDiff > DIP_TH or percentDiff > UPWARD_TH):
         buy()
         state = not state
-        log("Buy completed. \n")
+        log("Buy completed.\n")
 
 def attemptSell():
     percentDiff = (getPrices() - lastPrice) / lastPrice * 100.0
     if(percentDiff > PROFIT_TH or percentDiff < DOWNWARD_TH):
         sell()
         state = not state
-        log("Sell completed. \n")
+        log("Sell completed.\n")
 
 def log(msg):
     print(msg)
     logFile.write(msg) # add time stamps
-    
-# API functions
-def getBalances():
-    return 0
-
-def getPrices():
-    return 0
-
-def buy():
-    return 0
-
-def sell():
-    return 0
