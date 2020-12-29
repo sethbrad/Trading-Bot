@@ -1,9 +1,7 @@
-import time, api
+import time, api, dummyAPI
 
 # Bot has BUYING and SELLING state
 # Access transactions and data through Coinbase
-
-logFile = open("log.txt", "a")
 
 # 0 if buying, 1 if selling
 state = 0 
@@ -18,17 +16,21 @@ DOWNWARD_TH = -0.05
 
 ##########
 
+lastPrice = 0.0 # hard code this?
+
 def main():
+    global lastPrice
+    lastPrice = float(input("Enter last price for the crypto: "))
+
     while(1):
         trade()
-        time.sleep(60)
-    logFile.close()
+        time.sleep(10)
 
 ##########
 
-lastPrice = 100.0 # hard code this?
-
 def trade():
+    global state
+
     if(state == 0): # buying
         attemptBuy()
         
@@ -36,24 +38,39 @@ def trade():
         attemptSell()
 
 def attemptBuy():
-    percentDiff = (api.getPrices() - lastPrice) / lastPrice * 100.0
-    if(percentDiff > DIP_TH or percentDiff > UPWARD_TH):
-        api.buy()
+    global lastPrice, state
+    price = dummyAPI.getDPrice()
+
+    percentDiff = (price - lastPrice) / lastPrice * 100.0
+
+    if((percentDiff > DIP_TH or percentDiff > UPWARD_TH) and dummyAPI.getMoney() > (price/20)):
+        dummyAPI.dBuy(price / 20)
         state = not state
         log("Buy completed.\n")
 
+    lastPrice = price
+
 def attemptSell():
-    percentDiff = (api.getPrices() - lastPrice) / lastPrice * 100.0
-    if(percentDiff > PROFIT_TH or percentDiff < DOWNWARD_TH):
-        api.sell()
+    global lastPrice, state
+    price = dummyAPI.getDPrice()
+
+    percentDiff = (price - lastPrice) / lastPrice * 100.0
+
+    if((percentDiff > PROFIT_TH or percentDiff < DOWNWARD_TH) and dummyAPI.getStock() > (price/20)):
+        dummyAPI.dSell(price / 20)
         state = not state
         log("Sell completed.\n")
 
-def log(msg):
-    print(msg)
-    print(time.asctime())
+    lastPrice = price
 
-    logFile.write(msg)
+def log(msg): # expand with more details
+    logFile = open("log.txt", "a")
+
+    logFile.write(msg + "\n")
     logFile.write(time.asctime())
 
-# api.buy(1.00)
+    logFile.close()
+
+# # # # #
+main()
+# # # # #

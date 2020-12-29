@@ -5,20 +5,22 @@ with open("secret.json") as json_file:
 
 authClient = cbpro.AuthenticatedClient(secret["apiKey"], secret["apiSecret"], secret["passphrase"], api_url="https://api.pro.coinbase.com")
 
-with open("xrp.json") as json_file:
-    xrp = json.load(json_file)
+with open("accIDs.json") as json_file:
+    accIDs = json.load(json_file)
 
 # API functions
-def getAcc(): # id set to XRP account 
-    return authClient.get_account(xrp["id"])
+def getAcc(acc): # id set to XRP account 
+    return authClient.get_account(accIDs[acc])
 
-def getPrices():
+def getPrice(acc):
     return 0
 
 def buy(funds):
-    authClient.place_market_order(product_id="XRP", side="buy", funds=funds)
+    authClient.place_market_order(product_id="XRP-USD", side="buy", funds=funds)
+
+def sell(funds):
+    return 0
+
+def getOrders():
     orderList = authClient.get_orders()
     print(list(orderList))
-
-def sell():
-    return 0
