@@ -1,11 +1,14 @@
-import time, api, dummyAPI
+import api
+import DummyAPI
+import time
+
 import pandas as pd
 
 # Bot has BUYING and SELLING state
 # Access transactions and data through Coinbase
 
 # 0 if buying, 1 if selling
-state = 0 
+state = 0
 
 # buy thresholds
 DIP_TH = 0.05
@@ -39,7 +42,6 @@ DOWNWARD_TH = -0.05
 
     def getData(self): """
 
-
 ##########
 
 lastPrice = 0.0
@@ -47,12 +49,13 @@ profit = 0.0
 transactions = []
 prices = []
 
+
 def main():
     global lastPrice
     lastPrice = float(input("Enter last price for the crypto: "))
 
     try:
-        while(1):
+        while (1):
             trade()
             print("Profit: ", profit)
             time.sleep(5)
@@ -60,31 +63,33 @@ def main():
         dataOut()
         return
 
+
 ##########
 
 def trade():
     global state, profit
 
-    if(state == 0): # buying
-        if (attemptBuy()):
-            profit -= dummyAPI.getDPrice()
+    if state == 0:  # buying
+        if attemptBuy():
+            profit -= DummyAPI.getDPrice()
         else:
             return
-        
-    else: # selling
-        if (attemptSell()):
-            profit += dummyAPI.getDPrice()
+
+    else:  # selling
+        if attemptSell():
+            profit += DummyAPI.getDPrice()
         else:
             return
+
 
 def attemptBuy():
     global lastPrice, state, transactions, prices
-    price = dummyAPI.getDPrice()
+    price = DummyAPI.getDPrice()
 
     percentDiff = (price - lastPrice) / lastPrice * 100.0
 
-    if((percentDiff > DIP_TH or percentDiff > UPWARD_TH) and dummyAPI.getMoney() > (price / 10)):
-        dummyAPI.dBuy(price / 10)
+    if (percentDiff > DIP_TH or percentDiff > UPWARD_TH) and DummyAPI.getMoney() > (price / 10):
+        DummyAPI.dBuy(price / 10)
         transactions.append("buy")
         prices.append(price)
 
@@ -97,14 +102,15 @@ def attemptBuy():
     lastPrice = price
     return False
 
+
 def attemptSell():
     global lastPrice, state, transactions, prices
-    price = dummyAPI.getDPrice()
+    price = DummyAPI.getDPrice()
 
     percentDiff = (price - lastPrice) / lastPrice * 100.0
 
-    if((percentDiff > PROFIT_TH or percentDiff < DOWNWARD_TH) and dummyAPI.getStock() > (price / 10)):
-        dummyAPI.dSell(price / 10)
+    if (percentDiff > PROFIT_TH or percentDiff < DOWNWARD_TH) and DummyAPI.getStock() > (price / 10):
+        DummyAPI.dSell(price / 10)
         transactions.append("sell")
         prices.append(price)
 
@@ -113,11 +119,12 @@ def attemptSell():
 
         lastPrice = price
         return True
-    
+
     lastPrice = price
     return False
 
-def log(msg): # expand with more details
+
+def log(msg):  # expand with more details
     logFile = open("log.txt", "a")
 
     logFile.write(msg)
@@ -126,12 +133,14 @@ def log(msg): # expand with more details
 
     logFile.close()
 
+
 def dataOut():
     my_df = {"Action": transactions,
              "Price": prices}
 
     df = pd.DataFrame(my_df)
     data = df.to_csv("data.csv", index=True)
+
 
 # # # # #
 main()
