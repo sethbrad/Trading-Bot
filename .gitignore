@@ -2,7 +2,6 @@ secret.json
 log.txt
 data.csv
 
-accounts.txt
 accIDs.json
 
 __pycache__/

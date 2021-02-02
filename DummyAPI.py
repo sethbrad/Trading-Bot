@@ -1,15 +1,6 @@
 import random
 
 
-# gets a new market price with fluctuations
-def getDummyPrice(price):
-    start = round(price - (price / 20))
-    stop = round(price + (price / 20))
-
-    price = random.randrange(start, stop, 1)
-    return price
-
-
 class DummyAPI:
 
     def __init__(self, money, stock, price):
@@ -23,8 +14,13 @@ class DummyAPI:
     def getStock(self):
         return self.stock
 
-    def deposit(self, amount):
-        self.money += amount
+    # gets a new market price with fluctuations
+    def getDummyPrice(self):
+        start = round(self.price - (self.price / 20))
+        stop = round(self.price + (self.price / 20))
+
+        price = random.randrange(start, stop, 1)
+        return price
 
     def buy(self, funds):
         if self.money - funds < 0:
