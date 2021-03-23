@@ -1,7 +1,7 @@
 import cbpro
 import json
 
-with open("secret.json") as json_file:
+with open("./secret.json") as json_file:
     secret = json.load(json_file)
 
 authClient = cbpro.AuthenticatedClient(secret["apiKey"], secret["apiSecret"], secret["passphrase"],

@@ -70,7 +70,7 @@ class Bot:
             while 1:
                 self.trade()
                 print("Profit: ", self.profit)
-                time.sleep(5)
+                time.sleep(3)
         except KeyboardInterrupt:
             self.dataOut()
             return
@@ -137,6 +137,7 @@ class Bot:
 # # # # #
 bot = Bot()
 
-bot.main()
-bot.dataOut()
+if __name__ == "__main__":
+    bot.main()
+    bot.dataOut()
 # # # # #
